@@ -97,7 +97,8 @@ def doregress(X_train, y_train, n_train, X_test, y_test, n_test, band, fnames):
 
     # Some of these appear to be unstable
     # I.e. feature importance changes
-    for extension in ("A", "B", "C", "D", "E"):
+    #for extension in ("A", "B", "C", "D", "E"):
+    for extension in ("A", ):
         print "# Regressing", extension
 
         xtr   = ExtraTreeRegressor()
@@ -119,19 +120,19 @@ def doregress(X_train, y_train, n_train, X_test, y_test, n_test, band, fnames):
         ztw, mtw, stw, ftw = doplot(treew, X_test, y_test, z_test, n_test, fnames, "%s-band weighted DecisionTreeRegressor"%(band), "DCR_%s_%s_tree_weight.png"%(band, extension))
 
         ####
+        weights = n_train
+        nt      = 50
 
-        for widx, weights in enumerate((n_train, np.log10(n_train))):
-            for nt in (10, 50, 100):
-                rfr  = RandomForestRegressor(n_estimators=nt)
-                rfr.fit(X_train, y_train)
-                zr, mr, sr, fr = doplot(rfr, X_test, y_test, z_test, n_test, fnames, "%s-band RandomForestRegressor"%(band), "DCR_%s_%s_%d_rfr.png"%(band, extension, nt))
+        rfr  = RandomForestRegressor(n_estimators=nt)
+        rfr.fit(X_train, y_train)
+        zr, mr, sr, fr = doplot(rfr, X_test, y_test, z_test, n_test, fnames, "%s-band RandomForestRegressor"%(band), "DCR_%s_%s_%d_rfr.png"%(band, extension, nt))
                 
-                rfrw  = RandomForestRegressor(n_estimators=nt)
-                rfrw.fit(X_train, y_train, sample_weight=np.log10(n_train))
-                zrw, mrw, srw, frw = doplot(rfrw, X_test, y_test, z_test, n_test, fnames, "%s-band weighted RandomForestRegressor"%(band), "DCR_%s_%s_%d_rfr_weight.png"%(band, extension, nt))
-                print "RF %d %d : %.5f +/- %.5f vs %.5f +/- %.5f" % (widx, nt, 
-                                                                     np.median(fr), 0.741 * (np.percentile(fr, 75) - np.percentile(fr, 25)),
-                                                                     np.median(frw), 0.741 * (np.percentile(frw, 75) - np.percentile(frw, 25)))
+        rfrw  = RandomForestRegressor(n_estimators=nt)
+        rfrw.fit(X_train, y_train, sample_weight=weights)
+        zrw, mrw, srw, frw = doplot(rfrw, X_test, y_test, z_test, n_test, fnames, "%s-band weighted RandomForestRegressor"%(band), "DCR_%s_%s_%d_rfr_weight.png"%(band, extension, nt))
+        print "RF %d : %.5e +/- %.5e vs weighted %.5e +/- %.5e" % (nt, 
+                                                                   np.median(fr), 0.741 * (np.percentile(fr, 75) - np.percentile(fr, 25)),
+                                                                   np.median(frw), 0.741 * (np.percentile(frw, 75) - np.percentile(frw, 25)))
 
      
         ####
@@ -330,7 +331,7 @@ if __name__ == "__main__":
         gr     = colors[4]
         ri     = colors[7]
         iz     = colors[9]
-        gmag   = float(mag)
+        gmag   = float(mag) + 1.0 # THERE WAS A BUG IN THE MAGS, 1 MAG TOO BRIGHT
         umag   = gmag + ug
         rmag   = gmag - gr
         imag   = rmag - ri
