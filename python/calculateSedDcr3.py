@@ -77,7 +77,7 @@ def doit(args):
     refrac = []
     for zd in zds:
         # Find R 
-        ru = getOffset(waveleng, fluxu, zd)
+        ru = getOffset(wavelenu, fluxu, zd)
         rg = getOffset(waveleng, fluxg, zd)
         rr = getOffset(wavelenr, fluxr, zd)
         ri = getOffset(waveleni, fluxi, zd)
