@@ -156,7 +156,7 @@ def doregress(X_train, y_train, n_train, X_test, y_test, n_test, band, fnames):
         sp3.set_ylim(max(1e-7,ymin), 1.1)
 
         sp1.legend(loc=2, fancybox=True)
-        sp1.set_title("Mean refraction residual w.r.t. 500nm (arcsec)", weight="bold")
+        sp1.set_title("Mean refraction residual (arcsec)", weight="bold")
         sp2.set_ylabel("RMS residual (arcsec)", weight="bold")
         sp3.set_ylabel("f_tot with dR>%.3f"%(dcrLevel), weight="bold")
         sp3.set_xlabel("Zenith distance (deg)", weight="bold")
@@ -190,7 +190,7 @@ def doregress(X_train, y_train, n_train, X_test, y_test, n_test, band, fnames):
         sp3.set_ylim(max(1e-7,ymin), 1.1)
 
         sp1.legend(loc=2, fancybox=True)
-        sp1.set_title("Mean refraction residual w.r.t. 500nm (arcsec)", weight="bold")
+        sp1.set_title("Mean refraction residual (arcsec)", weight="bold")
         sp2.set_ylabel("RMS residual (arcsec)", weight="bold")
         sp3.set_ylabel("f_tot with dR>%.3f"%(dcrLevel), weight="bold")
         sp3.set_xlabel("Zenith distance (deg)", weight="bold")
