@@ -1,7 +1,7 @@
-.. image:: https://img.shields.io/badge/dmtn--069-lsst.io-brightgreen.svg
-   :target: https://dmtn-069.lsst.io
-.. image:: https://travis-ci.org/lsst-dm/dmtn-069.svg
-   :target: https://travis-ci.org/lsst-dm/dmtn-069
+.. image:: https://img.shields.io/badge/dmtn--070-lsst.io-brightgreen.svg
+   :target: https://dmtn-070.lsst.io
+.. image:: https://travis-ci.org/lsst-dm/dmtn-070.svg
+   :target: https://travis-ci.org/lsst-dm/dmtn-070
 ..
   Uncomment this section and modify the DOI strings to include a Zenodo DOI badge in the README
   .. image:: https://zenodo.org/badge/doi/10.5281/zenodo.#####.svg
@@ -11,7 +11,7 @@
 Report on Summer 2014 Production: Analysis of DCR
 #################################################
 
-DMTN-069
+DMTN-070
 ========
 
 The goals of this Summer 2014 (S14) task were to understand the scope
@@ -26,10 +26,10 @@ a function of airmass.
 
 **Links:**
 
-- Publication URL: https://dmtn-069.lsst.io
-- Alternative editions: https://dmtn-069.lsst.io/v
-- GitHub repository: https://github.com/lsst-dm/dmtn-069
-- Build system: https://travis-ci.org/lsst-dm/dmtn-069
+- Publication URL: https://dmtn-070.lsst.io
+- Alternative editions: https://dmtn-070.lsst.io/v
+- GitHub repository: https://github.com/lsst-dm/dmtn-070
+- Build system: https://travis-ci.org/lsst-dm/dmtn-070
 
 
 Build this technical note
@@ -40,20 +40,20 @@ You must have `lsst-texmf`_ installed.
 
 .. code-block:: bash
 
-   git clone https://github.com/lsst-dm/dmtn-069
-   cd dmtn-069
+   git clone https://github.com/lsst-dm/dmtn-070
+   cd dmtn-070
    make
 
 
 Editing this technical note
 ===========================
 
-You can edit the ``DMTN-069.tex`` file, which is a latex document.
+You can edit the ``DMTN-070.tex`` file, which is a latex document.
 
 Remember that images and other types of assets should be stored in the ``_static/`` directory of this repository.
 See ``_static/README.rst`` for more information.
 
-The published technote at https://dmtn-069.lsst.io will be automatically rebuilt whenever you push your changes to the ``master`` branch on `GitHub <https://github.com/lsst-dm/dmtn-069>`_.
+The published technote at https://dmtn-070.lsst.io will be automatically rebuilt whenever you push your changes to the ``master`` branch on `GitHub <https://github.com/lsst-dm/dmtn-070>`_.
 
 ****
 
@@ -61,5 +61,5 @@ Copyright 2017 University of Washington
 
 This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
 
-.. _this repo: ./DMTN-069.tex
+.. _this repo: ./DMTN-070.tex
 .. _lsst-texmf: https://lsst-texmf.lsst.io
