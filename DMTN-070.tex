@@ -1,39 +1,44 @@
-\documentclass[prd, nofootinbib, floatfix, 11pt, tightenlines, times]{article}
-\usepackage[paperwidth=8.5in,paperheight=11in,centering,margin=1.0in]{geometry}
-\usepackage[pdftex]{graphicx}
-\usepackage{natbib}
-\usepackage[toc,page]{appendix}
+\documentclass[DM,toc]{lsstdoc}
+
 \usepackage{subfig}
 \usepackage{fancyvrb}
-\usepackage{hyperref} 
-
-% pdflatex S14report.tex; bibtex S14report; pdflatex S14report; pdflatex S14report; gv S14report.pdf
-
-% Border around the figures
-%\usepackage{float}
-%\floatstyle{boxed}
-%\restylefloat{figure}
 \usepackage{framed}
 
-\def\figdir{../figures}
-\def\pasp{{\it PASP}}
-\def\aap{{\it Astr.~Ap.}}     %Astronomy & Astrophysics%
-\def\aaps{{\it A\&AS}}
-\def\apj{{\it ApJ}}
-\def\A{{\tt A}}
-\def\B{{\tt B}}
-\def\C{{\tt C}}
-\def\D{{\tt D}}
-\def\E{{\tt E}}
-\def\P{{\tt P}}
+\graphicspath{{./figures/}}
 
-\title{\vspace{-22mm} \Large{Report on Summer 2014 Production: Analysis of DCR\vspace{-10mm}}}
-\date{\today}
-\author{
-%  Andrew Becker, Simon Krughoff, Andrew Connolloy {\it for LSST Data Management}
+\def\A{\texttt{A}}
+\def\B{\texttt{B}}
+\def\C{\texttt{C}}
+\def\D{\texttt{D}}
+\def\E{\texttt{E}}
+\def\P{\texttt{P}}
+
+\title{Report on Summer 2014 Production: Analysis of DCR}
+
+\author{Andrew Becker, Simon Krughoff, and Andrew Connolly}
+
+\setDocRef{DMTN-070}
+\date{2014-10-01}
+\setDocUpstreamLocation{\url{https://github.com/lsst-dm/dmtn-070}}
+
+\setDocAbstract{%
+The goals of this Summer 2014 (S14) task were to understand the scope
+of the differential chromatic refraction (DCR) issue using a realistic
+range of stellar spectral energy distributions (SEDs).
 }
+
+\setDocChangeRecord{%
+\addtohist{}{2014-10-01}{Initial version.}{A.~Becker}
+\addtohist{1}{2017-12-27}{Converted to DMTN-070.}{T.~Jenness}
+%\addtohist{2}{yyyy-mm-dd}{Future changes}{Future person}
+}
+
 \begin{document}
-\maketitle\vspace{-8mm}
+
+\maketitle
+
+
+\section{Summary}
 
 The goals of this Summer 2014 (S14) task were to understand the scope
 of the differential chromatic refraction (DCR) issue using a realistic
@@ -107,10 +112,6 @@ address the actual methods needed to compensate for the DCR
 predictions coming out of this modeling process, although we provide
 some thoughts on possible techniques within the report.
 
-\clearpage
-\tableofcontents
-\clearpage
-
 \section{Scope and Goals}
 
 The goal of this research was to model the frequency at which
@@ -122,14 +123,14 @@ the pixel level were left as stretch goals that were preempted by the
 LSST 2014 documentation sprint.
 
 We used the theoretical and simulation studies undertaken in Winter
-2014\footnote{https://dev.lsstcorp.org/cgit/contrib/W14/ImageDifferencing.git/tree/report/W14report\_current.pdf}
+2014 \citedsp{DMTN-069}
 to understand the amplitude of astrometric offsets that lead to
 measurable dipoles in high S/N point sources: there is 1\% chance of
 generating a measurable dipole when there are unmodeled astrometric
 residuals of $\sim$5 mas in 0.6'' seeing, or $\sim$7 mas in 0.88''
 seeing.  To create a realistic all--sky 5--sigma sample of potential
 DCR sources, we used the actual SED population and brightness
-distribution of {\it all} objects from the catalogs used to seed the
+distribution of \emph{all} objects from the catalogs used to seed the
 LSST image simulations.  The SED of each source was used to find exact
 per--source and per--passband refraction amplitudes, as a function of
 airmass.  The broad--band colors were then used as inputs to a
@@ -140,40 +141,40 @@ and with the SED--derived total or differential refractions as the
 values we intended to predict.  The other 1/3 of these data were used
 to assess the predictive power of these models.
 
-All tasks were undertaken under epic DM-246, ``Investigate
+All tasks were undertaken under epic \jira{DM-246}, ``Investigate
 compensation for Dcr''.  The main stories were:
 
-\begin{itemize} 
+\begin{itemize}
 
-\item {\bf DM-787}: Using a realistic distribution of all SEDs from
+\item \jira{DM-787}: Using a realistic distribution of all SEDs from
   catSim, understand the bulk numbers of stars that we expect to
   exhibit DCR above a fiducial amplitude of 5mas.
 
-\item {\bf DM-788}: With this same distribution of catSim sources, use
+\item \jira{DM-788}: With this same distribution of catSim sources, use
   their spectral energy distributions to understand the per--source
   refraction amplitudes.
 
-\item {\bf DM-789}: Model and predict the per--source refraction
+\item \jira{DM-789}: Model and predict the per--source refraction
   amplitudes using only broad--band color and airmass terms.  This
   includes linear regression and non--linear machine learning
   techniques.  Understand how well the source color must be measured
   to be able to predict the refractive astrometric shift to within in
   a given tolerance of 5mas.
 
-\item {\bf DM-790}: With this same distribution of catSim sources, use
+\item \jira{DM-790}: With this same distribution of catSim sources, use
   their spectral energy distributions to understand the per--source
   differential chromatic refraction (DCR) amplitudes.
 
-\item {\bf DM-791}: Model and predict the per--source DCR using only
+\item \jira{DM-791}: Model and predict the per--source DCR using only
   broad--band color and airmass terms.  Understand how well the source
   color must be measured to be able to predict the DCR astrometric
   shift to within in a given tolerance of 5mas.
 
-\end{itemize} 
+\end{itemize}
 
 \section{Results}
 
-\subsection{\bf DM-787}
+\subsection{DM-787}
 
 The first task was to understand the magnitude of the problem: how
 many total stars do we expect to exhibit the effects of differential
@@ -194,14 +195,14 @@ calculate a flux--weighted refraction offset for each source, within
 each passband, and for a given airmass.  This offset is assumed to be
 the ``truth'' in the analyses that follow.
 
-We chose a reference SED with median g-r colors ({\tt
-  km15\_5250.fits\_g05\_5470.gz}) to calculate DCR against.  We first
+We chose a reference SED with median g-r colors
+(\texttt{km15\_5250.fits\_g05\_5470.gz}) to calculate DCR against.  We first
 calculated the amplitude of refraction for this reference source at an
 airmass of 1.25, and also did so for each of the other 6292 SEDs in
 the catSim database.  The DCR amplitude for each source is trivially
 calculated as the difference of the reference and source refraction
 amplitudes.  We then calculated both the amplitude and direction of
-DCR in a {\it second} observation, with a range of differing airmasses
+DCR in a \emph{second} observation, with a range of differing airmasses
 and/or parallactic angles.  This difference in DCR vector is what will
 manifest as a dipole in a subtracted image (e.g. if all images are
 taken under the same airmass and parallactic angle conditions, DCR
@@ -209,7 +210,7 @@ will be the exact same in all images, and there will be no dipoles due
 to this effect).  The total fraction of sources that exhibited a
 differential DCR amplitude greater than 5mas was used to color code
 the $\Delta$~airmass and $\Delta$~parallactic angle grid in
-Figure~\ref{fig:dcr}, for each of the $griz$ passbands.  The {\it red}
+Figure~\ref{fig:dcr}, for each of the $griz$ passbands.  The \emph{red}
 line shows where the fraction of sources exhibiting DCR larger than
 5mas is larger than 1\% (i.e. 1\% of stars have a 1\% chance of
 yielding DCR dipoles in a difference image).  We note that in the
@@ -234,32 +235,32 @@ these bands.
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=1.1\textwidth]{\figdir/calculateSedDcr2.png}
-  \caption{{\bf Fraction of Stars Exhibiting DCR Offsets Larger than
-      5mas}: We plot the fraction of {\it all} stars in the catSim
+  \includegraphics[width=1.1\textwidth]{calculateSedDcr2.png}
+  \caption{\textbf{Fraction of Stars Exhibiting DCR Offsets Larger than
+      5mas}: We plot the fraction of \emph{all} stars in the catSim
     database, brighter than 5--sigma, that will have differential DCR
-    amplitudes larger than 5mas compared to reference SED {\tt
-      km15\_5250.fits\_g05\_5470.gz} at airmass 1.25.  The
+    amplitudes larger than 5mas compared to reference SED
+    \texttt{km15\_5250.fits\_g05\_5470.gz} at airmass 1.25.  The
     per--passband total numbers of stars brighter than 5--sigma are
     listed in the title of each subpanel.  Each subpanel shows
     heatmaps with the log10 fraction of these stars having DCR
     amplitudes larger than 5mas, for differences in airmass and
     parallactic angle, for stars in the $griz$--bands.  This figure
-    may be recreated using the script {\tt
-      python/calculateSedDcr2.py}.}
+    may be recreated using the script
+    \texttt{python/calculateSedDcr2.py}.}
   \label{fig:dcr}
 \end{figure}
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=1.1\textwidth]{\figdir/calculateSedDcr2M.png}
-  \caption{{\bf Fraction of non--M Dwarf Stars Exhibiting DCR Offsets
-      Larger than 5mas}: Same as Figure~\ref{fig:dcr}, but {\it
-      excluding} the majority M-dwarf population of objects.}
+  \includegraphics[width=1.1\textwidth]{calculateSedDcr2M.png}
+  \caption{\textbf{Fraction of non--M Dwarf Stars Exhibiting DCR Offsets
+      Larger than 5mas}: Same as Figure~\ref{fig:dcr}, but
+      \emph{excluding} the majority M-dwarf population of objects.}
   \label{fig:dcrnoM}
 \end{figure}
 
-\subsection{\bf Modeling Refraction: DM-788 and DM-789}
+\subsection{Modeling Refraction: DM-788 and DM-789}
 
 In this work we assessed the extent to which we can predict the amount
 of refraction from broadband colors and airmass terms.  In addition,
@@ -282,9 +283,9 @@ $tan^3(z)$ where $z$ is the zenith distance of the observation
 using these terms, in order to predict the amplitude of refraction as
 a function of source color and airmass:
 \begin{eqnarray}
-  R(SED;z) & = & \sum_{i={\it ugriz}}\sum_{j>i} A_{ij} (m_i - m_j)        \\ \nonumber
-  & + & \sum_{i={\it ugriz}}\sum_{j>i} B_{ij} (m_i - m_j) \times tan(z)   \\ \nonumber
-  & + & \sum_{i={\it ugriz}}\sum_{j>i} C_{ij} (m_i - m_j) \times tan^3(z) \\ \nonumber
+  R(SED;z) & = & \sum_{i=\textit{ugriz}}\sum_{j>i} A_{ij} (m_i - m_j)        \\ \nonumber
+  & + & \sum_{i=\textit{ugriz}}\sum_{j>i} B_{ij} (m_i - m_j) \times tan(z)   \\ \nonumber
+  & + & \sum_{i=\textit{ugriz}}\sum_{j>i} C_{ij} (m_i - m_j) \times tan^3(z) \\ \nonumber
   & + & D \times tan(z) + E \times tan^3(z).                              \\ \nonumber
 \end{eqnarray}
 and explored several ways to solve for $[A_{ij},B_{ij},C_{ij},D,E]$.
@@ -293,7 +294,7 @@ refraction, is known.
 
 A linear regression was performed using the following methodology:
 \begin{Verbatim}[frame=single]
-import numpy as np  
+import numpy as np
 A = np.array((nsed * nairmass, nterms))
 R = np.array((nsed * nairmass,))
 # Fill array A with features; fill array R with SED-based refractions
@@ -301,18 +302,18 @@ cov = np.linalg.inv(np.dot(A.T, A))
 soln = np.dot(cov, np.dot(A.T, R))
 pred = np.dot(soln, A.T).
 \end{Verbatim}
-Here {\tt nsed} is the number of discrete SEDs in the database (6293),
-{\tt nairmass} are the airmasses to evaluate the model at (0..49
-degrees in steps of one degree), and {\tt nterms} are the total number
+Here \texttt{nsed} is the number of discrete SEDs in the database (6293),
+\texttt{nairmass} are the airmasses to evaluate the model at (0..49
+degrees in steps of one degree), and \texttt{nterms} are the total number
 of features in the model.  The mean and root--mean--square residuals
-of the prediction {\tt pred} were used to ascertain the goodness of
+of the prediction \texttt{pred} were used to ascertain the goodness of
 fit.  We found that this linear model was insufficient to describe the
 effects of refraction.
 
 Accordingly, we further explored non--linear regressions using the
-scikit--learn classes {\bf LinearRegression} (effectively the same as
-above), {\bf ExtraTreeRegressor}, {\bf DecisionTreeRegressor}, and
-{\bf RandomForestRegressor}.  We used 2/3 of the inputs to fit the
+scikit--learn classes \textbf{LinearRegression} (effectively the same as
+above), \textbf{ExtraTreeRegressor}, \textbf{DecisionTreeRegressor}, and
+\textbf{RandomForestRegressor}.  We used 2/3 of the inputs to fit the
 regression, and validated the predictive power of each model using the
 other 1/3 of the data.  In most cases we found that the random forests
 provided the best results, in terms of the mean model residuals as a
@@ -321,24 +322,24 @@ the fraction of stars showing unmodeled residuals larger than 5mas.
 We summarize these results for $u$--band in Figure~\ref{rmodel}, with
 $griz$--band data found in Figure~\ref{rmodel2} in
 Appendix~\ref{appx:rmodel}.  Within each subfigure, we plot the mean
-({\it top}) and RMS residuals ({\it middle}) of the cross--validation
+(\textit{top}) and RMS residuals (\textit{middle}) of the cross--validation
 sample, along with the fraction of all cross--validation stars that
-are misfit by more than 5mas ({\it bottom}).
+are misfit by more than 5mas (\textit{bottom}).
 
 \begin{figure}[!t]
     \centering
-    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{\figdir/R_u_A.png} }}
-    \caption{{\bf Modeling Refraction Using Broadband Colors}: This
+    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{R_u_A.png} }}
+    \caption{\textbf{Modeling Refraction Using Broadband Colors}: This
       figure summarizes the quality of the $u$--band regressions for
       the modeling of refraction as a function of airmass.  We used
       2/3 of the catSim SEDs to train the model, and 1/3 of the data
       to test the predictive power of the model.  This figure shows
-      the mean residuals ({\it top}) of the out--of--sample data, the
-      root--mean--square residuals ({\it middle}), and the fraction of
+      the mean residuals (\textit{top}) of the out--of--sample data, the
+      root--mean--square residuals (\textit{middle}), and the fraction of
       the out--of--sample sources with residuals larger than 5mas
-      ({\it bottom}).  We plot curves for each of the {\bf
-        LinearRegression}, {\bf ExtraTreeRegressor}, {\bf
-        DecisionTreeRegressor}, and {\bf RandomForestRegressor}
+      (\textit{bottom}).  We plot curves for each of the
+      \textbf{LinearRegression}, \textbf{ExtraTreeRegressor},
+      \textbf{DecisionTreeRegressor}, and \textbf{RandomForestRegressor}
       models.  We find that the linear regression provides a biased
       estimate of refraction at all airmasses, as does the random
       forest model, to a lesser degree.  The RMS residuals of the
@@ -350,7 +351,7 @@ are misfit by more than 5mas ({\it bottom}).
       the best model in terms of minimizing the number of these
       outliers.  Similar plots for the $griz$--bands can be found in
       Figure~\ref{rmodel2}.  This figure was created using the script
-      {\tt python/calculateSedDcr3ML.py}.}
+      \texttt{python/calculateSedDcr3ML.py}.}
     \label{rmodel}
 \end{figure}
 
@@ -384,15 +385,15 @@ Figure~\ref{fig:feat}.
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=1.1\textwidth]{\figdir/R_u_A_50_rfr.png}
-  \caption{{\bf Feature Importance}: This figure shows the relative
+  \includegraphics[width=1.1\textwidth]{R_u_A_50_rfr.png}
+  \caption{\textbf{Feature Importance}: This figure shows the relative
     importance of features used to model refraction in $u$--band using
     a random forest regression.}
   \label{fig:feat}
 \end{figure}
 
 
-We note that we did {\it not} attempt to optimize hyperparameters of
+We note that we did \textit{not} attempt to optimize hyperparameters of
 the models (e.g. the number of trees in the random forest).  We did
 explore weighted regressions, where each point in the training
 contributed proportional to the number of SEDs in the database, but
@@ -401,7 +402,7 @@ Because of the random nature of some of these models, we did notice
 subtle differences (e.g. in feature importance) in the results between
 different runs.
 
-\subsubsection{\bf Required Photometric Precision \label{sec:rcolor}}
+\subsubsection{Required Photometric Precision \label{sec:rcolor}}
 
 In order to understand LSST's ability to model refraction, as a
 function of uncertainty on source color, we repeated the above
@@ -412,7 +413,7 @@ drawn from normal distributions with means of zero (no bias) and
 widths of (0.01, 0.025, 0.05, 0.075, 0.1) magnitudes in color.  These
 were added to the SED--derived broadband colors and the regression
 model evaluated to generate a ``noisy'' prediction.  We only used the
-{\bf RandomForestRegressor} since this model seemed to perform best
+\textbf{RandomForestRegressor} since this model seemed to perform best
 under most conditions.  Results are summarized in Figure~\ref{rerr}
 for $u$--band, and Figure~\ref{rerr2} for $griz$--bands.
 
@@ -437,29 +438,29 @@ dipole, in $r$--band, at 50 degrees zenith distance ($3e9 \times 1e-4 /
 
 \begin{figure}[!t]
     \centering
-    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{\figdir/R_u_deriv.png} }}
-    \caption{{\bf Mapping Color Errors to Refraction Misestimates}: 
+    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{R_u_deriv.png} }}
+    \caption{\textbf{Mapping Color Errors to Refraction Misestimates}:
       This figure shows the results of evaluating a noisy dataset
-      using a $u$--band {\bf RandomForestRegressor} regression model
-      on refraction amplitude.  The {\it top} panel provides a measure
-      of the mean model offset as a function of airmass, the {\it
-        middle} panel the RMS offset, and the {\it bottom} panel the
+      using a $u$--band \textbf{RandomForestRegressor} regression model
+      on refraction amplitude.  The \textit{top} panel provides a measure
+      of the mean model offset as a function of airmass, the
+      \emph{middle} panel the RMS offset, and the \textit{bottom} panel the
       fraction of outliers with offsets larger than 5mas.  An
       out--of--bag sample comprising 1/3 of the SED dataset was used
-      to evaluate these models.  In {\it blue}, we show the core model
+      to evaluate these models.  In \textit{blue}, we show the core model
       performance in the absence of photometric errors.  The other
       lines show the degradation of the model when the test data have
       random offsets of 1\% to 10\%.  Similar plots for the
       $griz$--bands can be found in Figure~\ref{rerr2}.  This figure
-      was created using the script {\tt
-        python/calculateSedDcr3ML\_deriv.py}.}
+      was created using the script
+      \texttt{python/calculateSedDcr3ML\_deriv.py}.}
     \label{rerr}
 \end{figure}
 
-\subsection{\bf Modeling DCR: DM-790 and DM-791}
+\subsection{Modeling DCR: DM-790 and DM-791}
 
 In this work we determined the extent to which we can predict the
-amount of {\it DCR} from the broadband colors and airmass terms,
+amount of \textit{DCR} from the broadband colors and airmass terms,
 similar to the analysis above.  We came to similar conclusions from
 the training process, in that the random forest regression yields the
 model with the most predictive power (with the exception of the
@@ -470,12 +471,12 @@ and Figure~\ref{dcrmodel2} for $gri$--band).
 
 \begin{figure}[!t]
     \centering
-    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_u_A.png} }}
-    \caption{{\bf Modeling DCR Using Broadband Colors}: Similar to
+    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{DCR_u_A.png} }}
+    \caption{\textbf{Modeling DCR Using Broadband Colors}: Similar to
       Figure~\ref{rmodel}, but for a regression model that predicts
       DCR instead of refraction.  Similar plots for the $griz$--bands
       can be found in Figure~\ref{dcrmodel2}.  This figure was created
-      using the script {\tt python/calculateSedDcr4ML.py}.}
+      using the script \texttt{python/calculateSedDcr4ML.py}.}
     \label{dcrmodel}
 \end{figure}
 
@@ -487,7 +488,7 @@ order $10^{-6}$) exhibiting residuals larger than 5mas beyond zenith
 distance of 40 degrees, which translate to approximately 1 per LSST
 field.
 
-\subsubsection{\bf Required Photometric Precision}
+\subsubsection{Required Photometric Precision}
 
 In order to understand LSST's ability to model DCR, as a function of
 uncertainty on source color, we repeated the above analysis including
@@ -512,10 +513,10 @@ estimation errors.
 
 \begin{figure}[!t]
     \centering
-    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_u_deriv.png} }}
-    \caption{{\bf Mapping Color Errors to DCR Misestimates}: This
-      figure was created using the script {\tt
-        python/calculateSedDcr4ML\_deriv.py}.}
+    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{DCR_u_deriv.png} }}
+    \caption{\textbf{Mapping Color Errors to DCR Misestimates}: This
+      figure was created using the script
+      \texttt{python/calculateSedDcr4ML\_deriv.py}.}
     \label{dcrerr}
 \end{figure}
 
@@ -551,7 +552,7 @@ between model prediction and actual DCR amplitude can be larger before
 yielding a 1\% chance of a dipole.
 
 We note that this analysis has only been performed using the SEDs of
-stellar objects.  It is {\it not} expected that a refraction or DCR
+stellar objects.  It is \textit{not} expected that a refraction or DCR
 model generated using stars will be applicable to QSOs.  However,
 objects with unusual SEDs may be identified based upon their
 systematic residuals from stellar refraction models, and targeted for
@@ -562,7 +563,7 @@ further study.
 The requirements for the treatment of DCR in image subtraction must be
 traced back to the creation of the image subtraction templates.  To
 stack these images, the effects of DCR must be compensated for (or
-``undone'') before coaddition/averaging.  To {\it not} do so will
+``undone'') before coaddition/averaging.  To \textit{not} do so will
 introduce a systematic second moment to the effective template Psf
 that will be source--color dependent.  While the baseline design is
 for templates to be made at different seeings and airmasses, the
@@ -610,39 +611,38 @@ extreme color.  In all cases, a multi--epoch measurement package like
 multi--fit will need to be DCR--aware to compensate for per--epoch
 centroid shifts.
 
-\bibliographystyle{apj}
-\bibliography{refs}
+\bibliography{lsst,refs,books,refs_ads}
 
 \clearpage
-\begin{appendices}
+\appendix
 \section{Additional Figures}
 
 \subsection{Modeling Refraction Using Broadband Colors \label{appx:rmodel}}
 \begin{figure}[h]
     \centering
-    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{\figdir/R_g_A.png} }}
-    \caption[]{{\bf Modeling Refraction Using Broadband Colors}: Continuation of Figure~\ref{rmodel}.}
+    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{R_g_A.png} }}
+    \caption[]{\textbf{Modeling Refraction Using Broadband Colors}: Continuation of Figure~\ref{rmodel}.}
     \label{rmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{\figdir/R_r_A.png} }}
-    \caption[]{{\bf Modeling Refraction Using Broadband Colors}: (cont)}
+    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{R_r_A.png} }}
+    \caption[]{\textbf{Modeling Refraction Using Broadband Colors}: (cont)}
     \label{rmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{\figdir/R_i_A.png} }}
-    \caption[]{{\bf Modeling Refraction Using Broadband Colors}: (cont)}
+    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{R_i_A.png} }}
+    \caption[]{\textbf{Modeling Refraction Using Broadband Colors}: (cont)}
     \label{rmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{\figdir/R_z_A.png} }}
-    \caption[]{{\bf Modeling Refraction Using Broadband Colors}: (cont)}
+    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{R_z_A.png} }}
+    \caption[]{\textbf{Modeling Refraction Using Broadband Colors}: (cont)}
     \label{rmodel2}
 \end{figure}
 \clearpage
@@ -650,29 +650,29 @@ centroid shifts.
 \subsection{Mapping Color Errors to Refraction Misestimates \label{appx:rerr}}
 \begin{figure}[h]
     \centering
-    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{\figdir/R_g_deriv.png} }}
-    \caption[]{{\bf Mapping Color Errors to Refraction Misestimates}:  Continuation of Figure~\ref{rerr}.}
+    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{R_g_deriv.png} }}
+    \caption[]{\textbf{Mapping Color Errors to Refraction Misestimates}:  Continuation of Figure~\ref{rerr}.}
     \label{rerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{\figdir/R_r_deriv.png} }}
-    \caption[]{{\bf Mapping Color Errors to Refraction Misestimates}: (cont)}
+    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{R_r_deriv.png} }}
+    \caption[]{\textbf{Mapping Color Errors to Refraction Misestimates}: (cont)}
     \label{rerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{\figdir/R_i_deriv.png} }}
-    \caption[]{{\bf Mapping Color Errors to Refraction Misestimates}: (cont)}
+    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{R_i_deriv.png} }}
+    \caption[]{\textbf{Mapping Color Errors to Refraction Misestimates}: (cont)}
     \label{rerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{\figdir/R_z_deriv.png} }}
-    \caption[]{{\bf Mapping Color Errors to Refraction Misestimates}: (cont)}
+    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{R_z_deriv.png} }}
+    \caption[]{\textbf{Mapping Color Errors to Refraction Misestimates}: (cont)}
     \label{rerr2}
 \end{figure}
 \clearpage
@@ -680,29 +680,29 @@ centroid shifts.
 \subsection{Modeling DCR Using Broadband Colors \label{appx:dcrmodel}}
 \begin{figure}[h]
     \centering
-    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_g_A.png} }}
-    \caption[]{{\bf Modeling DCR Using Broadband Colors}: Continuation of Figure~\ref{dcrmodel}.}
+    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{DCR_g_A.png} }}
+    \caption[]{\textbf{Modeling DCR Using Broadband Colors}: Continuation of Figure~\ref{dcrmodel}.}
     \label{dcrmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_r_A.png} }}
-    \caption[]{{\bf Modeling DCR Using Broadband Colors}: (cont)}
+    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{DCR_r_A.png} }}
+    \caption[]{\textbf{Modeling DCR Using Broadband Colors}: (cont)}
     \label{dcrmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_i_A.png} }}
-    \caption[]{{\bf Modeling DCR Using Broadband Colors}: (cont)}
+    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{DCR_i_A.png} }}
+    \caption[]{\textbf{Modeling DCR Using Broadband Colors}: (cont)}
     \label{dcrmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_z_A.png} }}
-    \caption[]{{\bf Modeling DCR Using Broadband Colors}: (cont)}
+    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{DCR_z_A.png} }}
+    \caption[]{\textbf{Modeling DCR Using Broadband Colors}: (cont)}
     \label{dcrmodel2}
 \end{figure}
 \clearpage
@@ -710,32 +710,31 @@ centroid shifts.
 \subsection{Mapping Color Errors to DCR Misestimates \label{appx:dcrerr}}
 \begin{figure}[h]
     \centering
-    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_g_deriv.png} }}
-    \caption[]{{\bf Mapping Color Errors to DCR Misestimates}: Continuation of Figure~\ref{dcrerr}.}
+    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{DCR_g_deriv.png} }}
+    \caption[]{\textbf{Mapping Color Errors to DCR Misestimates}: Continuation of Figure~\ref{dcrerr}.}
     \label{dcrerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_r_deriv.png} }}
-    \caption[]{{\bf Mapping Color Errors to DCR Misestimates}: (cont)}
+    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{DCR_r_deriv.png} }}
+    \caption[]{\textbf{Mapping Color Errors to DCR Misestimates}: (cont)}
     \label{dcrerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_i_deriv.png} }}
-    \caption[]{{\bf Mapping Color Errors to DCR Misestimates}: (cont)}
+    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{DCR_i_deriv.png} }}
+    \caption[]{\textbf{Mapping Color Errors to DCR Misestimates}: (cont)}
     \label{dcrerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_z_deriv.png} }}
-    \caption[]{{\bf Mapping Color Errors to DCR Misestimates}: (cont)}
+    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{DCR_z_deriv.png} }}
+    \caption[]{\textbf{Mapping Color Errors to DCR Misestimates}: (cont)}
     \label{dcrerr2}
 \end{figure}
 
-\end{appendices}
 
 \end{document}
