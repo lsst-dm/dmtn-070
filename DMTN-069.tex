@@ -1,25 +1,11 @@
-\documentclass[prd, nofootinbib, floatfix, 11pt, tightenlines, times]{article}
-\usepackage[paperwidth=8.5in,paperheight=11in,centering,margin=1.0in]{geometry}
-\usepackage[pdftex]{graphicx}
-\usepackage{natbib}
-\usepackage[toc,page]{appendix}
+\documentclass[DM,toc]{lsstdoc}
+
 \usepackage{subfig}
 \usepackage{fancyvrb}
-\usepackage{hyperref} 
-
-% pdflatex S14report.tex; bibtex S14report; pdflatex S14report; pdflatex S14report; gv S14report.pdf
-
-% Border around the figures
-%\usepackage{float}
-%\floatstyle{boxed}
-%\restylefloat{figure}
 \usepackage{framed}
 
-\def\figdir{../figures}
-\def\pasp{{\it PASP}}
-\def\aap{{\it Astr.~Ap.}}     %Astronomy & Astrophysics%
-\def\aaps{{\it A\&AS}}
-\def\apj{{\it ApJ}}
+\graphicspath{{./figures/}}
+
 \def\A{{\tt A}}
 \def\B{{\tt B}}
 \def\C{{\tt C}}
@@ -27,13 +13,32 @@
 \def\E{{\tt E}}
 \def\P{{\tt P}}
 
-\title{\vspace{-22mm} \Large{Report on Summer 2014 Production: Analysis of DCR\vspace{-10mm}}}
-\date{\today}
-\author{
-%  Andrew Becker, Simon Krughoff, Andrew Connolloy {\it for LSST Data Management}
+\title{Report on Summer 2014 Production: Analysis of DCR}
+
+\author{Andrew Becker, Simon Krughoff, and Andrew Connolly}
+
+\setDocRef{DMTN-063}
+\date{2014-10-01}
+\setDocUpstreamLocation{\url{https://github.com/lsst-dm/dmtn-069}}
+
+\setDocAbstract{%
+The goals of this Summer 2014 (S14) task were to understand the scope
+of the differential chromatic refraction (DCR) issue using a realistic
+range of stellar spectral energy distributions (SEDs).
 }
+
+\setDocChangeRecord{%
+\addtohist{}{2014-10-01}{Initial version.}{A.~Becker}
+\addtohist{1}{2017-12-27}{Converted to DMTN-069.}{T.~Jenness}
+%\addtohist{2}{yyyy-mm-dd}{Future changes}{Future person}
+}
+
 \begin{document}
-\maketitle\vspace{-8mm}
+
+\maketitle
+
+
+\section{Summary}
 
 The goals of this Summer 2014 (S14) task were to understand the scope
 of the differential chromatic refraction (DCR) issue using a realistic
@@ -107,10 +112,6 @@ address the actual methods needed to compensate for the DCR
 predictions coming out of this modeling process, although we provide
 some thoughts on possible techniques within the report.
 
-\clearpage
-\tableofcontents
-\clearpage
-
 \section{Scope and Goals}
 
 The goal of this research was to model the frequency at which
@@ -143,7 +144,7 @@ to assess the predictive power of these models.
 All tasks were undertaken under epic DM-246, ``Investigate
 compensation for Dcr''.  The main stories were:
 
-\begin{itemize} 
+\begin{itemize}
 
 \item {\bf DM-787}: Using a realistic distribution of all SEDs from
   catSim, understand the bulk numbers of stars that we expect to
@@ -169,7 +170,7 @@ compensation for Dcr''.  The main stories were:
   color must be measured to be able to predict the DCR astrometric
   shift to within in a given tolerance of 5mas.
 
-\end{itemize} 
+\end{itemize}
 
 \section{Results}
 
@@ -234,7 +235,7 @@ these bands.
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=1.1\textwidth]{\figdir/calculateSedDcr2.png}
+  \includegraphics[width=1.1\textwidth]{calculateSedDcr2.png}
   \caption{{\bf Fraction of Stars Exhibiting DCR Offsets Larger than
       5mas}: We plot the fraction of {\it all} stars in the catSim
     database, brighter than 5--sigma, that will have differential DCR
@@ -252,7 +253,7 @@ these bands.
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=1.1\textwidth]{\figdir/calculateSedDcr2M.png}
+  \includegraphics[width=1.1\textwidth]{calculateSedDcr2M.png}
   \caption{{\bf Fraction of non--M Dwarf Stars Exhibiting DCR Offsets
       Larger than 5mas}: Same as Figure~\ref{fig:dcr}, but {\it
       excluding} the majority M-dwarf population of objects.}
@@ -293,7 +294,7 @@ refraction, is known.
 
 A linear regression was performed using the following methodology:
 \begin{Verbatim}[frame=single]
-import numpy as np  
+import numpy as np
 A = np.array((nsed * nairmass, nterms))
 R = np.array((nsed * nairmass,))
 # Fill array A with features; fill array R with SED-based refractions
@@ -327,7 +328,7 @@ are misfit by more than 5mas ({\it bottom}).
 
 \begin{figure}[!t]
     \centering
-    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{\figdir/R_u_A.png} }}
+    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{R_u_A.png} }}
     \caption{{\bf Modeling Refraction Using Broadband Colors}: This
       figure summarizes the quality of the $u$--band regressions for
       the modeling of refraction as a function of airmass.  We used
@@ -384,7 +385,7 @@ Figure~\ref{fig:feat}.
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=1.1\textwidth]{\figdir/R_u_A_50_rfr.png}
+  \includegraphics[width=1.1\textwidth]{R_u_A_50_rfr.png}
   \caption{{\bf Feature Importance}: This figure shows the relative
     importance of features used to model refraction in $u$--band using
     a random forest regression.}
@@ -437,8 +438,8 @@ dipole, in $r$--band, at 50 degrees zenith distance ($3e9 \times 1e-4 /
 
 \begin{figure}[!t]
     \centering
-    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{\figdir/R_u_deriv.png} }}
-    \caption{{\bf Mapping Color Errors to Refraction Misestimates}: 
+    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{R_u_deriv.png} }}
+    \caption{{\bf Mapping Color Errors to Refraction Misestimates}:
       This figure shows the results of evaluating a noisy dataset
       using a $u$--band {\bf RandomForestRegressor} regression model
       on refraction amplitude.  The {\it top} panel provides a measure
@@ -470,7 +471,7 @@ and Figure~\ref{dcrmodel2} for $gri$--band).
 
 \begin{figure}[!t]
     \centering
-    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_u_A.png} }}
+    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{DCR_u_A.png} }}
     \caption{{\bf Modeling DCR Using Broadband Colors}: Similar to
       Figure~\ref{rmodel}, but for a regression model that predicts
       DCR instead of refraction.  Similar plots for the $griz$--bands
@@ -512,7 +513,7 @@ estimation errors.
 
 \begin{figure}[!t]
     \centering
-    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_u_deriv.png} }}
+    \subfloat[$u$--band]{{\includegraphics[width=\textwidth]{DCR_u_deriv.png} }}
     \caption{{\bf Mapping Color Errors to DCR Misestimates}: This
       figure was created using the script {\tt
         python/calculateSedDcr4ML\_deriv.py}.}
@@ -610,38 +611,37 @@ extreme color.  In all cases, a multi--epoch measurement package like
 multi--fit will need to be DCR--aware to compensate for per--epoch
 centroid shifts.
 
-\bibliographystyle{apj}
-\bibliography{refs}
+\bibliography{lsst,refs,books,refs_ads}
 
 \clearpage
-\begin{appendices}
+\appendix
 \section{Additional Figures}
 
 \subsection{Modeling Refraction Using Broadband Colors \label{appx:rmodel}}
 \begin{figure}[h]
     \centering
-    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{\figdir/R_g_A.png} }}
+    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{R_g_A.png} }}
     \caption[]{{\bf Modeling Refraction Using Broadband Colors}: Continuation of Figure~\ref{rmodel}.}
     \label{rmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{\figdir/R_r_A.png} }}
+    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{R_r_A.png} }}
     \caption[]{{\bf Modeling Refraction Using Broadband Colors}: (cont)}
     \label{rmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{\figdir/R_i_A.png} }}
+    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{R_i_A.png} }}
     \caption[]{{\bf Modeling Refraction Using Broadband Colors}: (cont)}
     \label{rmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{\figdir/R_z_A.png} }}
+    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{R_z_A.png} }}
     \caption[]{{\bf Modeling Refraction Using Broadband Colors}: (cont)}
     \label{rmodel2}
 \end{figure}
@@ -650,28 +650,28 @@ centroid shifts.
 \subsection{Mapping Color Errors to Refraction Misestimates \label{appx:rerr}}
 \begin{figure}[h]
     \centering
-    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{\figdir/R_g_deriv.png} }}
+    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{R_g_deriv.png} }}
     \caption[]{{\bf Mapping Color Errors to Refraction Misestimates}:  Continuation of Figure~\ref{rerr}.}
     \label{rerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{\figdir/R_r_deriv.png} }}
+    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{R_r_deriv.png} }}
     \caption[]{{\bf Mapping Color Errors to Refraction Misestimates}: (cont)}
     \label{rerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{\figdir/R_i_deriv.png} }}
+    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{R_i_deriv.png} }}
     \caption[]{{\bf Mapping Color Errors to Refraction Misestimates}: (cont)}
     \label{rerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{\figdir/R_z_deriv.png} }}
+    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{R_z_deriv.png} }}
     \caption[]{{\bf Mapping Color Errors to Refraction Misestimates}: (cont)}
     \label{rerr2}
 \end{figure}
@@ -680,28 +680,28 @@ centroid shifts.
 \subsection{Modeling DCR Using Broadband Colors \label{appx:dcrmodel}}
 \begin{figure}[h]
     \centering
-    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_g_A.png} }}
+    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{DCR_g_A.png} }}
     \caption[]{{\bf Modeling DCR Using Broadband Colors}: Continuation of Figure~\ref{dcrmodel}.}
     \label{dcrmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_r_A.png} }}
+    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{DCR_r_A.png} }}
     \caption[]{{\bf Modeling DCR Using Broadband Colors}: (cont)}
     \label{dcrmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_i_A.png} }}
+    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{DCR_i_A.png} }}
     \caption[]{{\bf Modeling DCR Using Broadband Colors}: (cont)}
     \label{dcrmodel2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_z_A.png} }}
+    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{DCR_z_A.png} }}
     \caption[]{{\bf Modeling DCR Using Broadband Colors}: (cont)}
     \label{dcrmodel2}
 \end{figure}
@@ -710,32 +710,31 @@ centroid shifts.
 \subsection{Mapping Color Errors to DCR Misestimates \label{appx:dcrerr}}
 \begin{figure}[h]
     \centering
-    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_g_deriv.png} }}
+    \subfloat[$g$--band]{{\includegraphics[width=\textwidth]{DCR_g_deriv.png} }}
     \caption[]{{\bf Mapping Color Errors to DCR Misestimates}: Continuation of Figure~\ref{dcrerr}.}
     \label{dcrerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_r_deriv.png} }}
+    \subfloat[$r$--band]{{\includegraphics[width=\textwidth]{DCR_r_deriv.png} }}
     \caption[]{{\bf Mapping Color Errors to DCR Misestimates}: (cont)}
     \label{dcrerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_i_deriv.png} }}
+    \subfloat[$i$--band]{{\includegraphics[width=\textwidth]{DCR_i_deriv.png} }}
     \caption[]{{\bf Mapping Color Errors to DCR Misestimates}: (cont)}
     \label{dcrerr2}
 \end{figure}
 \begin{figure}
-    \ContinuedFloat 
+    \ContinuedFloat
     \centering
-    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{\figdir/DCR_z_deriv.png} }}
+    \subfloat[$z$--band]{{\includegraphics[width=\textwidth]{DCR_z_deriv.png} }}
     \caption[]{{\bf Mapping Color Errors to DCR Misestimates}: (cont)}
     \label{dcrerr2}
 \end{figure}
 
-\end{appendices}
 
 \end{document}
